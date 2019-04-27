@@ -27,7 +27,7 @@ const detailsPage = props => {
         );
     }
     return (
-        <Modal animationType='slide' visible={props.selected !== null}>
+        <Modal animationType='slide' visible={props.selected !== null} onRequestClose={props.closeListItemHandler}>
             <View style={styles.modalContainer}>
                 {content}
                 <Button title={'Delete'} color={'red'} onPress={props.removeListItemHandler}/>
