@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "react": "16.8.3",
-    "react-native": "0.59.4"
+    "react-native": "0.59.4",
+    "redux": "^4.0.1",
+    "react-redux": "^7.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",

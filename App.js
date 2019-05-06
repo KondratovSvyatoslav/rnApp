@@ -5,60 +5,38 @@ import InputFieldComponent from './src/Components/InputFieldComponent'
 import CityList from './src/Components/CityList'
 import DetailsPage from './src/Components/DetailsPage'
 
-export default class App extends Component {
+import {addCity, deselectCity, removeCity, selectCity} from './src/store/actions/index'
+import {connect} from 'react-redux'
+
+class App extends Component {
     constructor() {
         super()
-        this.state = {
-            cities: [],
-            selected: null
-        }
     }
 
     buttonClickHandler(value) {
-        this.setState(prevState => {
-            return {
-                cities: prevState.cities.concat({
-                    value: value,
-                    key: '' + Math.random(),
-                    image: {
-                        uri: 'https://images.spot.im/v1/production/am8uunwlgu48aqmiualn'
-                    }
-                })
-            }
-        })
+        this.props.onAddCity(value)
     }
 
     removeListItemHandler() {
-        this.setState(prevState => {
-            return {
-                cities: prevState.cities.filter(city => {
-                    return city.key !== prevState.selected.key
-                }),
-                selected: null
-            }
-        })
+        this.props.onRemoveCity()
     }
 
     clickOnListItemHandler(key) {
-        this.setState(prevState => {
-            return {
-                selected: prevState.cities.find(city => city.key === key)
-            }
-        })
+        this.props.onSelectCity(key)
     }
 
     closeListItemHandler() {
-        this.setState({selected: null})
+        this.props.onDeselectCity()
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <DetailsPage selected={this.state.selected}
+                <DetailsPage selected={this.props.selected}
                              closeListItemHandler={this.closeListItemHandler.bind(this)}
                              removeListItemHandler={this.removeListItemHandler.bind(this)}/>
                 <InputFieldComponent buttonClickHandler={this.buttonClickHandler.bind(this)}/>
-                <CityList cityList={this.state.cities} itemListClickHandler={this.clickOnListItemHandler.bind(this)}/>
+                <CityList cityList={this.props.cities} itemListClickHandler={this.clickOnListItemHandler.bind(this)}/>
             </View>
         );
     }
@@ -73,3 +51,22 @@ const styles = StyleSheet.create({
     },
 
 });
+
+const mapStateToProps = state => {
+    return {
+        cities: state.citiesReducer.cities,
+        selected: state.citiesReducer.selected
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAddCity: name => dispatch(addCity(name)),
+        onRemoveCity: () => dispatch(removeCity()),
+        onSelectCity: key => dispatch(selectCity(key)),
+        onDeselectCity: () => dispatch(deselectCity())
+    }
+
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App)
